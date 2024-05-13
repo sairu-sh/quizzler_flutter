@@ -6,10 +6,12 @@ class CountDownTimer extends StatefulWidget {
   int currentQuestionIndex;
   int time;
   bool isAnswered;
+  bool questionAppeared;
 
   CountDownTimer(
       {super.key,
       required this.timeUp,
+      required this.questionAppeared,
       required this.isAnswered,
       required this.currentQuestionIndex,
       required this.time});
@@ -33,10 +35,14 @@ class _CountDownTimerState extends State<CountDownTimer>
       vsync: this,
       duration: Duration(seconds: widget.time),
     );
-    controller.forward();
+    // controller.forward();
     controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        widget.timeUp();
+      if (widget.questionAppeared) {
+        if (status == AnimationStatus.completed) {
+          widget.timeUp();
+        }
+      } else {
+        controller.reset();
       }
     });
   }
@@ -47,7 +53,8 @@ class _CountDownTimerState extends State<CountDownTimer>
     if (widget.isAnswered && !oldWidget.isAnswered) {
       controller.stop();
     }
-    if (widget.currentQuestionIndex != oldWidget.currentQuestionIndex) {
+    if (widget.currentQuestionIndex != oldWidget.currentQuestionIndex ||
+        widget.questionAppeared != oldWidget.questionAppeared) {
       controller.reset();
       controller.forward();
     }
@@ -55,70 +62,67 @@ class _CountDownTimerState extends State<CountDownTimer>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white10,
-      body: AnimatedBuilder(
-          animation: controller,
-          builder: (context, child) {
-            return Stack(
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: Align(
-                            alignment: FractionalOffset.center,
-                            child: AspectRatio(
-                              aspectRatio: 1.0,
-                              child: Stack(
-                                children: <Widget>[
-                                  Positioned.fill(
-                                    child: CustomPaint(
-                                        painter: CustomTimerPainter(
-                                      animation: controller,
-                                      backgroundColor: Colors.white,
-                                      color: Colors.red,
-                                    )),
+    return AnimatedBuilder(
+        animation: controller,
+        builder: (context, child) {
+          return Stack(
+            children: <Widget>[
+              Container(
+                width: 100,
+                height: 100,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        child: Align(
+                          alignment: FractionalOffset.center,
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: Stack(
+                              children: <Widget>[
+                                Positioned.fill(
+                                  child: CustomPaint(
+                                      painter: CustomTimerPainter(
+                                    animation: controller,
+                                    backgroundColor: Colors.white,
+                                    color: Colors.red,
+                                  )),
+                                ),
+                                Align(
+                                  alignment: FractionalOffset.center,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        timerString,
+                                        style: const TextStyle(
+                                            fontSize: 20.0,
+                                            color: Colors.white),
+                                      ),
+                                    ],
                                   ),
-                                  Align(
-                                    alignment: FractionalOffset.center,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          timerString,
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            );
-          }),
-    );
+              ),
+            ],
+          );
+        });
   }
 
   @override
