@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
+
 import 'widgets/answer_widget.dart';
 import 'widgets/question_widget.dart';
 import 'widgets/result_widget.dart';
@@ -7,7 +11,6 @@ import 'widgets/button_widget.dart';
 import 'widgets/timer_widget.dart';
 import 'widgets/video_player.dart';
 import 'quiz_brain.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(
@@ -88,8 +91,8 @@ class _MyAppState extends State<MyApp> {
                 backgroundColor: Colors.blueGrey[900],
               )
             : PreferredSize(
-                preferredSize: Size.fromHeight(0.0), // Set height to zero
-                child: Container(), // Empty container to ensure zero height
+                preferredSize: const Size.fromHeight(0.0),
+                child: Container(),
               ),
         body: Consumer<QuizBrain>(
           builder: (context, controller, child) {
@@ -98,63 +101,132 @@ class _MyAppState extends State<MyApp> {
             }
             return OrientationBuilder(
               builder: (context, orientation) {
+                if (orientation == Orientation.landscape) {
+                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                      overlays: [SystemUiOverlay.bottom]);
+                } else {
+                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                      overlays: SystemUiOverlay.values);
+                }
                 return SingleChildScrollView(
-                  child: Stack(
-                    children: [
-                      Column(children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: orientation == Orientation.landscape
-                                  ? 20.0
-                                  : 0.0),
-                          child: SizedBox(
-                            height: orientation == Orientation.landscape
-                                ? MediaQuery.of(context).size.height
-                                : 200,
-                            child: VideoPlayerScreen(
-                              pauseVideo: pauseVideo,
-                              questionAppeared: questionAppeared,
-                              pauseOn: controller.pauseOn,
-                              isAnswered: isAnswered,
-                              setisAnswered: setisAnswered,
-                              vController: vController,
+                  child: Stack(children: [
+                    SizedBox(
+                      height: orientation == Orientation.landscape
+                          ? MediaQuery.of(context).size.height
+                          : MediaQuery.of(context).size.height * 0.25,
+                      child: VideoPlayerScreen(
+                        pauseVideo: pauseVideo,
+                        questionAppeared: questionAppeared,
+                        pauseOn: controller.pauseOn,
+                        isAnswered: isAnswered,
+                        setisAnswered: setisAnswered,
+                        vController: vController,
+                      ),
+                    ),
+                    Visibility(
+                      visible: !questionAppeared &&
+                          orientation == Orientation.portrait,
+                      child: Column(
+                        children: [
+                          if (orientation == Orientation.portrait)
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                            ),
+                          SizedBox(
+                            height: 500,
+                            width: 500,
+                            child: Lottie.asset(
+                              'assets/animations/watchingCat.json',
+                              repeat: true,
+                              animate: true,
+                              height: 500,
+                              width: 500,
                             ),
                           ),
-                        ),
-                        Visibility(
-                          visible: !questionAppeared,
-                          child: const Text('watching.....'),
-                        ),
-                        Visibility(
-                            visible: questionAppeared &&
-                                controller.currentIndex != -1,
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible:
+                          questionAppeared && controller.currentIndex != -1,
+
+                      // duration: const Duration(milliseconds: 500),
+                      // top: orientation == Orientation.portrait
+                      //     ? MediaQuery.of(context).size.height * 0.25
+                      //     : 0,
+                      // left: questionAppeared
+                      //     ? 0
+                      //     : -MediaQuery.of(context).size.width,
+                      // child: Positioned(
+                      //   top: orientation == Orientation.portrait
+                      //       ? MediaQuery.of(context).size.height * 0.25
+                      //       : 0,
+                      //   width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          if (orientation == Orientation.portrait)
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                            ),
+                          Container(
+                            color: Colors.grey[300],
+                            constraints: BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height,
+                            ),
                             child: Column(
                               children: [
                                 controller.isLoading
                                     ? const CircularProgressIndicator()
-                                    : QuestionWidget(
-                                        questionText:
-                                            controller.currentQuestion,
-                                        textColor: Colors.black,
+                                    : Padding(
+                                        padding: EdgeInsets.only(
+                                            top: orientation ==
+                                                    Orientation.landscape
+                                                ? 20.0
+                                                : 5.0),
+                                        child: QuestionWidget(
+                                          questionText:
+                                              controller.currentQuestion,
+                                          textColor: Colors.black,
+                                        ),
                                       ),
                                 const SizedBox(height: 10.0),
                                 if (orientation == Orientation.landscape)
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount:
-                                        (controller.currentAnswers.length / 2)
-                                            .ceil(),
-                                    itemBuilder: (context, index) {
-                                      final startIndex = index * 2;
-                                      final endIndex = startIndex + 2;
-                                      return Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: controller.currentAnswers
-                                            .sublist(startIndex, endIndex)
-                                            .map((answer) => Expanded(
+                                  SizedBox(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const ClampingScrollPhysics(),
+                                      itemCount:
+                                          (controller.currentAnswers.length / 2)
+                                              .ceil(),
+                                      itemBuilder: (context, index) {
+                                        final startIndex = index * 2;
+                                        final endIndex = startIndex + 2;
+
+                                        // Create the sublist, ensuring the last item is paired with an empty string if needed
+                                        final sublist =
+                                            controller.currentAnswers.sublist(
+                                          startIndex,
+                                          endIndex >
+                                                  controller
+                                                      .currentAnswers.length
+                                              ? controller.currentAnswers.length
+                                              : endIndex,
+                                        );
+
+                                        if (sublist.length == 1) {
+                                          sublist.add(
+                                              ''); // Add an empty string to make it a pair
+                                        }
+
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 10.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              for (var answer in sublist)
+                                                Expanded(
                                                   child: AnswerButton(
                                                     currentIndex:
                                                         controller.currentIndex,
@@ -186,44 +258,49 @@ class _MyAppState extends State<MyApp> {
                                                         .correctAnswerIndex,
                                                     raiseButton: raiseButton,
                                                   ),
-                                                ))
-                                            .toList(),
-                                      );
-                                    },
+                                                ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   )
                                 else
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        ...controller.currentAnswers.map(
-                                          (answer) => AnswerButton(
-                                              currentIndex:
-                                                  controller.currentIndex,
-                                              answerText: answer.toString(),
-                                              isTimeUp: isTimeUp,
-                                              onPressed: () {
-                                                setState(() {
-                                                  selectedIndex = controller
-                                                      .currentAnswers
-                                                      .indexOf(answer);
-                                                });
-                                              },
-                                              color: selectedIndex ==
-                                                      controller.currentAnswers
-                                                          .indexOf(answer)
-                                                  ? 'active'
-                                                  : 'inactive',
-                                              isAnswered: isAnswered,
-                                              index: controller.currentAnswers
-                                                  .indexOf(answer),
-                                              selectedIndex: selectedIndex,
-                                              correctIndex:
-                                                  controller.correctAnswerIndex,
-                                              raiseButton: raiseButton),
-                                        ),
-                                      ]),
-                                const SizedBox(height: 20.0),
+                                  ListView(
+                                    shrinkWrap: true,
+                                    physics: const ClampingScrollPhysics(),
+                                    children:
+                                        controller.currentAnswers.map((answer) {
+                                      return AnswerButton(
+                                        currentIndex: controller.currentIndex,
+                                        answerText: answer.toString(),
+                                        isTimeUp: isTimeUp,
+                                        onPressed: () {
+                                          setState(() {
+                                            selectedIndex = controller
+                                                .currentAnswers
+                                                .indexOf(answer);
+                                          });
+                                        },
+                                        color: selectedIndex ==
+                                                controller.currentAnswers
+                                                    .indexOf(answer)
+                                            ? 'active'
+                                            : 'inactive',
+                                        isAnswered: isAnswered,
+                                        index: controller.currentAnswers
+                                            .indexOf(answer),
+                                        selectedIndex: selectedIndex,
+                                        correctIndex:
+                                            controller.correctAnswerIndex,
+                                        raiseButton: raiseButton,
+                                      );
+                                    }).toList(),
+                                  ),
+                                SizedBox(
+                                    height: orientation == Orientation.landscape
+                                        ? 40.0
+                                        : 20.0),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
@@ -237,6 +314,7 @@ class _MyAppState extends State<MyApp> {
                                         // color: Colors.blue,
                                       ),
                                       child: CountDownTimer(
+                                          // questionAppeared: questionAppeared,
                                           timeUp: timeUp,
                                           currentQuestionIndex:
                                               controller.currentIndex,
@@ -302,26 +380,30 @@ class _MyAppState extends State<MyApp> {
                                     ),
                                   ],
                                 ),
+                                const SizedBox(height: 20)
                               ],
-                            )),
-                      ]),
-                      if (showAnimation)
-                        Positioned(
-                          top: 175,
-                          left: (orientation == Orientation.landscape)
-                              ? 110
-                              : -50,
-                          child: ResultWidget(
-                              isCorrect: isCorrect,
-                              isTimeUp: isTimeUp,
-                              resetQuestion: resetQuestion,
-                              height: (orientation == Orientation.landscape)
-                                  ? 350
-                                  : 500,
-                              width: 500),
-                        ),
-                    ],
-                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      // ),
+                    ),
+                    if (showAnimation)
+                      Positioned(
+                        top: MediaQuery.of(context).size.height * 0.5 - 250,
+                        left: MediaQuery.of(context).size.width * 0.5 - 250,
+                        child: ResultWidget(
+                            isCorrect: isCorrect,
+                            isTimeUp: isTimeUp,
+                            resetQuestion: resetQuestion,
+                            height: (orientation == Orientation.landscape)
+                                ? 500
+                                : 500,
+                            width: (orientation == Orientation.landscape)
+                                ? 500
+                                : 500),
+                      ),
+                  ]),
                 );
               },
             );
