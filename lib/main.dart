@@ -201,16 +201,22 @@ class _MyAppState extends State<MyApp> {
                                       itemBuilder: (context, index) {
                                         final startIndex = index * 2;
                                         final endIndex = startIndex + 2;
+
+                                        // Create the sublist, ensuring the last item is paired with an empty string if needed
                                         final sublist =
                                             controller.currentAnswers.sublist(
-                                                startIndex,
-                                                endIndex >
-                                                        controller
-                                                            .currentAnswers
-                                                            .length
-                                                    ? controller
-                                                        .currentAnswers.length
-                                                    : endIndex);
+                                          startIndex,
+                                          endIndex >
+                                                  controller
+                                                      .currentAnswers.length
+                                              ? controller.currentAnswers.length
+                                              : endIndex,
+                                        );
+
+                                        if (sublist.length == 1) {
+                                          sublist.add(
+                                              ''); // Add an empty string to make it a pair
+                                        }
 
                                         return Padding(
                                           padding:
@@ -253,17 +259,6 @@ class _MyAppState extends State<MyApp> {
                                                     raiseButton: raiseButton,
                                                   ),
                                                 ),
-                                              if (sublist.length == 1 &&
-                                                  endIndex <=
-                                                      controller.currentAnswers
-                                                          .length)
-                                                Expanded(
-                                                    child: SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.25)), // Add an empty widget to maintain layout
                                             ],
                                           ),
                                         );
@@ -395,17 +390,18 @@ class _MyAppState extends State<MyApp> {
                     ),
                     if (showAnimation)
                       Positioned(
-                        top: 175,
-                        left:
-                            (orientation == Orientation.landscape) ? 110 : -50,
+                        top: MediaQuery.of(context).size.height * 0.5 - 250,
+                        left: MediaQuery.of(context).size.width * 0.5 - 250,
                         child: ResultWidget(
                             isCorrect: isCorrect,
                             isTimeUp: isTimeUp,
                             resetQuestion: resetQuestion,
                             height: (orientation == Orientation.landscape)
-                                ? 350
+                                ? 500
                                 : 500,
-                            width: 500),
+                            width: (orientation == Orientation.landscape)
+                                ? 500
+                                : 500),
                       ),
                   ]),
                 );
