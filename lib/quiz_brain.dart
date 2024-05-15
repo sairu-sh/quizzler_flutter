@@ -48,12 +48,26 @@ class QuizBrain with ChangeNotifier {
       questions[_currentQuestionIndex].correctAnswerIndex;
   String get currentQuestion =>
       questions.isNotEmpty && _currentQuestionIndex != -1
-          ? questions[_currentQuestionIndex].questionText
+          ? (questions[_currentQuestionIndex].questionText)
           : 'No question loaded';
-  List<String> get currentAnswers =>
+  Map<String, dynamic> get currentAnswersOrImages {
+    if (questions.isNotEmpty && _currentQuestionIndex != -1) {
+      var currentQuestion = questions[_currentQuestionIndex];
+      if (currentQuestion.answers != null &&
+          currentQuestion.answers!.isNotEmpty) {
+        return {'list': currentQuestion.answers!, 'isAnswerImages': false};
+      } else if (currentQuestion.answerImages != null &&
+          currentQuestion.answerImages!.isNotEmpty) {
+        return {'list': currentQuestion.answerImages!, 'isAnswerImages': true};
+      }
+    }
+    return {'list': [], 'isAnswerImages': false};
+  }
+
+  String get currentQuestionImage =>
       questions.isNotEmpty && _currentQuestionIndex != -1
-          ? questions[_currentQuestionIndex].answers
-          : [];
+          ? (questions[_currentQuestionIndex].questionImage ?? '')
+          : 'No question loaded';
   int get pauseOn => _currentQuestionIndex != -1
       ? questions[_currentQuestionIndex].pausedOn
       : -1;

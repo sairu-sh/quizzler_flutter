@@ -11,6 +11,7 @@ class AnswerButton extends StatefulWidget {
   int correctIndex;
   int currentIndex;
   bool isTimeUp;
+  bool isAnswerImages;
 
   AnswerButton({
     super.key,
@@ -18,6 +19,7 @@ class AnswerButton extends StatefulWidget {
     required this.onPressed,
     required this.color,
     required this.isAnswered,
+    required this.isAnswerImages,
     required this.correctIndex,
     required this.selectedIndex,
     required this.index,
@@ -109,6 +111,23 @@ class _AnswerButtonState extends State<AnswerButton>
                     borderRadius: BorderRadius.circular(
                       isLandscape ? 8 : 15,
                     ),
+                    border: Border.all(
+                      width: (widget.selectedIndex == widget.index ||
+                                  (widget.isAnswered &&
+                                      (widget.index == widget.selectedIndex ||
+                                          widget.index ==
+                                              widget.correctIndex))) &&
+                              widget.isAnswerImages
+                          ? 5
+                          : 0.0,
+                      color: widget.isAnswered
+                          ? widget.correctIndex == widget.index
+                              ? Colors.green
+                              : widget.selectedIndex == widget.index
+                                  ? Colors.red
+                                  : Colors.white
+                          : Colors.transparent,
+                    ),
                     boxShadow: widget.selectedIndex == widget.index &&
                             widget.answerText != ''
                         ? [
@@ -134,11 +153,13 @@ class _AnswerButtonState extends State<AnswerButton>
                       ),
                     ),
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      isLandscape
-                          ? const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 10)
-                          : const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
+                      widget.isAnswerImages
+                          ? const EdgeInsets.all(0.0)
+                          : isLandscape
+                              ? const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 10)
+                              : const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 10),
                     ),
                     backgroundColor: MaterialStateProperty.all<Color>(
                       _getBackgroundColor(),
@@ -152,10 +173,27 @@ class _AnswerButtonState extends State<AnswerButton>
                   onPressed: widget.isAnswered || widget.selectedIndex == -2
                       ? null
                       : widget.onPressed,
-                  child: Text(
-                    widget.answerText,
-                    style: const TextStyle(fontSize: 14, color: Colors.white),
-                  ),
+                  child: widget.isAnswerImages
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(15.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Image.asset(
+                                  'assets/images/${widget.answerText}',
+                                  height: 100,
+                                  fit: BoxFit
+                                      .fill, // Ensures the image covers the button space
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Text(
+                          widget.answerText,
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.white),
+                        ),
                 ),
               ),
             )

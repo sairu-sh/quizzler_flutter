@@ -1,9 +1,17 @@
 [
   {
     "questionText": "Which is the most popular JavaScript framework?",
-    "answers": ["Angular", "React", "Svelte", "Vue"],
+    "questionImage": "zoro1.jpg",
+    "answerImages": ["mikasa1.jpg", "mitsuri1.jpg", "robin1.jpg", "tengen.jpg"],
     "correctAnswerIndex": 1,
     "pausedOn": 2
+  },
+  {
+    "questionText": "Which is the most popular JavaScript framework?",
+    "questionImage": "robin2.jpg",
+    "answers": ["Angular", "React", "Svelte", "Vue"],
+    "correctAnswerIndex": 1,
+    "pausedOn": 5
   },
   {
     "questionText": "When will an effect run if it doesn't have a dependency array?",
@@ -14,7 +22,7 @@
       "Each time the component is re-rendered"
     ],
     "correctAnswerIndex": 3,
-    "pausedOn": 5
+    "pausedOn": 10
   },
   {
     "questionText": "What's the fundamental building block of React apps?",
