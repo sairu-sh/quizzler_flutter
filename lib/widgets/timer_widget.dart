@@ -6,10 +6,14 @@ class CountDownTimer extends StatefulWidget {
   int currentQuestionIndex;
   int time;
   bool isAnswered;
+  int correctIndex;
+  final Function(int) setSelectedIndex;
 
   CountDownTimer(
       {super.key,
       required this.timeUp,
+      required this.correctIndex,
+      required this.setSelectedIndex,
       required this.isAnswered,
       required this.currentQuestionIndex,
       required this.time});
@@ -37,6 +41,7 @@ class _CountDownTimerState extends State<CountDownTimer>
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         widget.timeUp();
+        widget.setSelectedIndex(widget.correctIndex);
       }
     });
   }

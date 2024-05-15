@@ -170,9 +170,7 @@ class _AnswerButtonState extends State<AnswerButton>
                           : 0.0, // Apply shadow if active
                     ),
                   ),
-                  onPressed: widget.isAnswered || widget.selectedIndex == -2
-                      ? null
-                      : widget.onPressed,
+                  onPressed: widget.isAnswered ? null : widget.onPressed,
                   child: widget.isAnswerImages
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),

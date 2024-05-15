@@ -53,6 +53,12 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void setSelectedIndex(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   void raiseButton() {
     isPressed = false;
   }
@@ -60,7 +66,7 @@ class _MyAppState extends State<MyApp> {
   void timeUp() {
     setState(() {
       isTimeUp = !isTimeUp;
-      selectedIndex = -2;
+      // selectedIndex = -2;
       showAnimation = true;
       isAnswered = true;
     });
@@ -86,7 +92,7 @@ class _MyAppState extends State<MyApp> {
         backgroundColor: Colors.blueGrey[100],
         appBar: MediaQuery.of(context).orientation == Orientation.portrait
             ? AppBar(
-                title: const Text('Quizzler',
+                title: Text('Quizzler $selectedIndex',
                     style: TextStyle(color: Colors.white)),
                 backgroundColor: Colors.blueGrey[900],
               )
@@ -334,7 +340,9 @@ class _MyAppState extends State<MyApp> {
                                         // color: Colors.blue,
                                       ),
                                       child: CountDownTimer(
-                                          // questionAppeared: questionAppeared,
+                                          setSelectedIndex: setSelectedIndex,
+                                          correctIndex:
+                                              controller.correctAnswerIndex,
                                           timeUp: timeUp,
                                           currentQuestionIndex:
                                               controller.currentIndex,
@@ -414,6 +422,7 @@ class _MyAppState extends State<MyApp> {
                       top: MediaQuery.of(context).size.height * 0.5 - 250,
                       left: MediaQuery.of(context).size.width * 0.5 - 250,
                       child: ResultWidget(
+                          // correctIndex: controller.correctAnswerIndex,
                           isCorrect: isCorrect,
                           isTimeUp: isTimeUp,
                           resetQuestion: resetQuestion,
