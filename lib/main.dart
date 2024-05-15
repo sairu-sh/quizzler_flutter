@@ -186,6 +186,8 @@ class _MyAppState extends State<MyApp> {
                                         child: QuestionWidget(
                                           questionText:
                                               controller.currentQuestion,
+                                          questionImage:
+                                              controller.currentQuestionImage,
                                           textColor: Colors.black,
                                         ),
                                       ),
@@ -195,27 +197,32 @@ class _MyAppState extends State<MyApp> {
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       physics: const ClampingScrollPhysics(),
-                                      itemCount:
-                                          (controller.currentAnswers.length / 2)
-                                              .ceil(),
+                                      itemCount: (controller
+                                                  .currentAnswersOrImages[
+                                                      'list']
+                                                  .length /
+                                              2)
+                                          .ceil(),
                                       itemBuilder: (context, index) {
                                         final startIndex = index * 2;
                                         final endIndex = startIndex + 2;
 
-                                        // Create the sublist, ensuring the last item is paired with an empty string if needed
-                                        final sublist =
-                                            controller.currentAnswers.sublist(
+                                        final sublist = controller
+                                            .currentAnswersOrImages['list']
+                                            .sublist(
                                           startIndex,
                                           endIndex >
                                                   controller
-                                                      .currentAnswers.length
-                                              ? controller.currentAnswers.length
+                                                      .currentAnswersOrImages[
+                                                          'list']
+                                                      .length
+                                              ? controller
+                                                  .currentAnswersOrImages.length
                                               : endIndex,
                                         );
 
                                         if (sublist.length == 1) {
-                                          sublist.add(
-                                              ''); // Add an empty string to make it a pair
+                                          sublist.add('');
                                         }
 
                                         return Padding(
@@ -228,6 +235,9 @@ class _MyAppState extends State<MyApp> {
                                               for (var answer in sublist)
                                                 Expanded(
                                                   child: AnswerButton(
+                                                    isAnswerImages: controller
+                                                            .currentAnswersOrImages[
+                                                        'isAnswerImages'],
                                                     currentIndex:
                                                         controller.currentIndex,
                                                     answerText:
@@ -235,22 +245,23 @@ class _MyAppState extends State<MyApp> {
                                                     isTimeUp: isTimeUp,
                                                     onPressed: () {
                                                       setState(() {
-                                                        selectedIndex =
-                                                            controller
-                                                                .currentAnswers
-                                                                .indexOf(
-                                                                    answer);
+                                                        selectedIndex = controller
+                                                            .currentAnswersOrImages[
+                                                                'list']
+                                                            .indexOf(answer);
                                                       });
                                                     },
                                                     color: selectedIndex ==
                                                             controller
-                                                                .currentAnswers
+                                                                .currentAnswersOrImages[
+                                                                    'list']
                                                                 .indexOf(answer)
                                                         ? 'active'
                                                         : 'inactive',
                                                     isAnswered: isAnswered,
                                                     index: controller
-                                                        .currentAnswers
+                                                        .currentAnswersOrImages[
+                                                            'list']
                                                         .indexOf(answer),
                                                     selectedIndex:
                                                         selectedIndex,
@@ -269,27 +280,37 @@ class _MyAppState extends State<MyApp> {
                                   ListView(
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
-                                    children:
-                                        controller.currentAnswers.map((answer) {
+                                    children: (controller
+                                                .currentAnswersOrImages['list']
+                                            as List<String>)
+                                        .map((answer) {
                                       return AnswerButton(
+                                        isAnswerImages:
+                                            controller.currentAnswersOrImages[
+                                                'isAnswerImages'] as bool,
                                         currentIndex: controller.currentIndex,
                                         answerText: answer.toString(),
                                         isTimeUp: isTimeUp,
                                         onPressed: () {
                                           setState(() {
-                                            selectedIndex = controller
-                                                .currentAnswers
+                                            selectedIndex = (controller
+                                                        .currentAnswersOrImages[
+                                                    'list'] as List<String>)
                                                 .indexOf(answer);
                                           });
                                         },
                                         color: selectedIndex ==
-                                                controller.currentAnswers
+                                                controller
+                                                    .currentAnswersOrImages[
+                                                        'list']
                                                     .indexOf(answer)
                                             ? 'active'
                                             : 'inactive',
                                         isAnswered: isAnswered,
-                                        index: controller.currentAnswers
-                                            .indexOf(answer),
+                                        index:
+                                            (controller.currentAnswersOrImages[
+                                                    'list'] as List<String>)
+                                                .indexOf(answer),
                                         selectedIndex: selectedIndex,
                                         correctIndex:
                                             controller.correctAnswerIndex,
@@ -318,7 +339,7 @@ class _MyAppState extends State<MyApp> {
                                           timeUp: timeUp,
                                           currentQuestionIndex:
                                               controller.currentIndex,
-                                          time: 10,
+                                          time: 1800,
                                           isAnswered: isAnswered),
                                     ),
                                     Button(

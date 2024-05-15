@@ -1,21 +1,31 @@
 class Question {
   String questionText;
-  List<String> answers;
+  String? questionImage;
+  List<String>? answers;
+  List<String>? answerImages;
   int correctAnswerIndex;
   int pausedOn;
 
   Question({
     required this.questionText,
-    required this.answers,
+    this.answers,
+    this.questionImage,
+    this.answerImages,
     required this.correctAnswerIndex,
     required this.pausedOn,
   });
 
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
-        questionText: json['questionText'] as String,
-        answers: List<String>.from(json['answers']),
-        correctAnswerIndex: json['correctAnswerIndex'] as int,
-        pausedOn: json['pausedOn'] as int);
+      questionText: json['questionText'] as String,
+      questionImage: json['questionImage'] as String?,
+      answers:
+          json.containsKey('answers') ? List<String>.from(json['answers']) : [],
+      answerImages: json.containsKey('answerImages')
+          ? List<String>.from(json['answerImages'])
+          : [],
+      correctAnswerIndex: json['correctAnswerIndex'] as int,
+      pausedOn: json['pausedOn'] as int,
+    );
   }
 }
