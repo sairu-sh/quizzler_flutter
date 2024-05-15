@@ -108,60 +108,59 @@ class _MyAppState extends State<MyApp> {
                   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
                       overlays: SystemUiOverlay.values);
                 }
-                return SingleChildScrollView(
-                  child: Stack(children: [
-                    SizedBox(
-                      height: orientation == Orientation.landscape
-                          ? MediaQuery.of(context).size.height
-                          : MediaQuery.of(context).size.height * 0.25,
-                      child: VideoPlayerScreen(
-                        pauseVideo: pauseVideo,
-                        questionAppeared: questionAppeared,
-                        pauseOn: controller.pauseOn,
-                        isAnswered: isAnswered,
-                        setisAnswered: setisAnswered,
-                        vController: vController,
-                      ),
+                return Stack(children: [
+                  SizedBox(
+                    height: orientation == Orientation.landscape
+                        ? MediaQuery.of(context).size.height
+                        : MediaQuery.of(context).size.height * 0.25,
+                    child: VideoPlayerScreen(
+                      pauseVideo: pauseVideo,
+                      questionAppeared: questionAppeared,
+                      pauseOn: controller.pauseOn,
+                      isAnswered: isAnswered,
+                      setisAnswered: setisAnswered,
+                      vController: vController,
                     ),
-                    Visibility(
-                      visible: !questionAppeared &&
-                          orientation == Orientation.portrait,
-                      child: Column(
-                        children: [
-                          if (orientation == Orientation.portrait)
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                            ),
+                  ),
+                  Visibility(
+                    visible: !questionAppeared &&
+                        orientation == Orientation.portrait,
+                    child: Column(
+                      children: [
+                        if (orientation == Orientation.portrait)
                           SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.25,
+                          ),
+                        SizedBox(
+                          height: 500,
+                          width: 500,
+                          child: Lottie.asset(
+                            'assets/animations/watchingCat.json',
+                            repeat: true,
+                            animate: true,
                             height: 500,
                             width: 500,
-                            child: Lottie.asset(
-                              'assets/animations/watchingCat.json',
-                              repeat: true,
-                              animate: true,
-                              height: 500,
-                              width: 500,
-                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    Visibility(
-                      visible:
-                          questionAppeared && controller.currentIndex != -1,
+                  ),
+                  Visibility(
+                    visible: questionAppeared && controller.currentIndex != -1,
 
-                      // duration: const Duration(milliseconds: 500),
-                      // top: orientation == Orientation.portrait
-                      //     ? MediaQuery.of(context).size.height * 0.25
-                      //     : 0,
-                      // left: questionAppeared
-                      //     ? 0
-                      //     : -MediaQuery.of(context).size.width,
-                      // child: Positioned(
-                      //   top: orientation == Orientation.portrait
-                      //       ? MediaQuery.of(context).size.height * 0.25
-                      //       : 0,
-                      //   width: MediaQuery.of(context).size.width,
+                    // duration: const Duration(milliseconds: 500),
+                    // top: orientation == Orientation.portrait
+                    //     ? MediaQuery.of(context).size.height * 0.25
+                    //     : 0,
+                    // left: questionAppeared
+                    //     ? 0
+                    //     : -MediaQuery.of(context).size.width,
+                    // child: Positioned(
+                    //   top: orientation == Orientation.portrait
+                    //       ? MediaQuery.of(context).size.height * 0.25
+                    //       : 0,
+                    //   width: MediaQuery.of(context).size.width,
+                    child: SingleChildScrollView(
                       child: Column(
                         children: [
                           if (orientation == Orientation.portrait)
@@ -339,7 +338,7 @@ class _MyAppState extends State<MyApp> {
                                           timeUp: timeUp,
                                           currentQuestionIndex:
                                               controller.currentIndex,
-                                          time: 1800,
+                                          time: 10,
                                           isAnswered: isAnswered),
                                     ),
                                     Button(
@@ -407,25 +406,25 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ],
                       ),
-                      // ),
                     ),
-                    if (showAnimation)
-                      Positioned(
-                        top: MediaQuery.of(context).size.height * 0.5 - 250,
-                        left: MediaQuery.of(context).size.width * 0.5 - 250,
-                        child: ResultWidget(
-                            isCorrect: isCorrect,
-                            isTimeUp: isTimeUp,
-                            resetQuestion: resetQuestion,
-                            height: (orientation == Orientation.landscape)
-                                ? 500
-                                : 500,
-                            width: (orientation == Orientation.landscape)
-                                ? 500
-                                : 500),
-                      ),
-                  ]),
-                );
+                    // ),
+                  ),
+                  if (showAnimation)
+                    Positioned(
+                      top: MediaQuery.of(context).size.height * 0.5 - 250,
+                      left: MediaQuery.of(context).size.width * 0.5 - 250,
+                      child: ResultWidget(
+                          isCorrect: isCorrect,
+                          isTimeUp: isTimeUp,
+                          resetQuestion: resetQuestion,
+                          height: (orientation == Orientation.landscape)
+                              ? 500
+                              : 500,
+                          width: (orientation == Orientation.landscape)
+                              ? 500
+                              : 500),
+                    ),
+                ]);
               },
             );
           },

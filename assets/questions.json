@@ -26,7 +26,7 @@
   },
   {
     "questionText": "What's the fundamental building block of React apps?",
-    "answers": ["Components", "Blocks", "Elements", "Effects"],
+    "answerImages": ["mikasa1.jpg", "mitsuri1.jpg", "robin1.jpg", "tengen.jpg"],
     "correctAnswerIndex": 0,
     "pausedOn": 15
   },
