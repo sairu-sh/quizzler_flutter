@@ -42,6 +42,11 @@ class QuizBrain with ChangeNotifier {
     return questions[_currentQuestionIndex].correctAnswerIndex == index;
   }
 
+  void restartQuiz() {
+    _currentQuestionIndex = 0;
+    notifyListeners();
+  }
+
   bool get isLoading => _isLoading;
   int get currentIndex => _currentQuestionIndex;
   int get correctAnswerIndex =>
@@ -61,7 +66,7 @@ class QuizBrain with ChangeNotifier {
         return {'list': currentQuestion.answerImages!, 'isAnswerImages': true};
       }
     }
-    return {'list': [], 'isAnswerImages': false};
+    return {'list': <String>[], 'isAnswerImages': false};
   }
 
   String get currentQuestionImage =>
