@@ -26,7 +26,11 @@ class _CountDownTimerState extends State<CountDownTimer>
   late AnimationController controller;
 
   String get timerString {
-    Duration duration = controller.duration! * (1.0 - controller.value);
+    Duration duration = controller.duration! * (1.0 - controller.value) +
+        const Duration(seconds: 1);
+    if (controller.value == 1) {
+      return '00:00';
+    }
     return '${(duration.inMinutes).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 

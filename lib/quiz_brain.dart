@@ -49,8 +49,14 @@ class QuizBrain with ChangeNotifier {
 
   bool get isLoading => _isLoading;
   int get currentIndex => _currentQuestionIndex;
-  int get correctAnswerIndex =>
-      questions[_currentQuestionIndex].correctAnswerIndex;
+  int get correctAnswerIndex {
+    if (_currentQuestionIndex != -1) {
+      return questions[_currentQuestionIndex].correctAnswerIndex;
+    } else {
+      return -1;
+    }
+  }
+
   String get currentQuestion =>
       questions.isNotEmpty && _currentQuestionIndex != -1
           ? (questions[_currentQuestionIndex].questionText)
