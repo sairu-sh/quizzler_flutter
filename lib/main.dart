@@ -150,18 +150,22 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                   Visibility(
-                    visible: !questionAppeared &&
-                        orientation == Orientation.portrait,
+                    visible: !questionAppeared,
                     child: Column(
                       children: [
-                        if (orientation == Orientation.portrait)
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.25,
-                          ),
+                        SizedBox(
+                          height: orientation == Orientation.portrait
+                              ? MediaQuery.of(context).size.height * 0.25
+                              : 0,
+                        ),
                         if (isOver)
-                          SizedBox(
-                            height: 500,
-                            width: 500,
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 400),
+                            color: Colors.blueGrey[300],
+                            height: orientation == Orientation.portrait
+                                ? 500
+                                : MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
                             child: Column(
                               children: [
                                 const SizedBox(height: 10),
@@ -174,7 +178,8 @@ class _MyAppState extends State<MyApp> {
                                 ),
                                 ResultWidget(
                                   resetQuestion: () {},
-                                  height: 400.0,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.8,
                                   width: 400.0,
                                   isTimeUp: true,
                                   isCorrect: false,
@@ -187,10 +192,11 @@ class _MyAppState extends State<MyApp> {
                           )
                         else if (controller.currentIndex == -1)
                           RestartResume(
+                              isPortrait: orientation == Orientation.portrait,
                               vController: vController,
                               resetQuestionAppeared: resetQuestionAppeared,
                               resetQuestionIndex: controller.restartQuiz)
-                        else
+                        else if (orientation == Orientation.portrait)
                           SizedBox(
                             height: 500,
                             width: 500,
@@ -478,22 +484,22 @@ class _MyAppState extends State<MyApp> {
                     ),
                     // ),
                   ),
-                  if (showAnimation)
-                    Positioned(
-                      top: MediaQuery.of(context).size.height * 0.5 - 250,
-                      left: MediaQuery.of(context).size.width * 0.5 - 250,
-                      child: ResultWidget(
-                          // correctIndex: controller.correctAnswerIndex,
-                          isCorrect: isCorrect,
-                          isTimeUp: isTimeUp,
-                          resetQuestion: resetQuestion,
-                          height: (orientation == Orientation.landscape)
-                              ? 500
-                              : 500,
-                          width: (orientation == Orientation.landscape)
-                              ? 500
-                              : 500),
-                    ),
+                  // if (showAnimation)
+                  //   Positioned(
+                  //     top: MediaQuery.of(context).size.height * 0.5 - 250,
+                  //     left: MediaQuery.of(context).size.width * 0.5 - 250,
+                  //     child: ResultWidget(
+                  //         // correctIndex: controller.correctAnswerIndex,
+                  //         isCorrect: isCorrect,
+                  //         isTimeUp: isTimeUp,
+                  //         resetQuestion: resetQuestion,
+                  //         height: (orientation == Orientation.landscape)
+                  //             ? 500
+                  //             : 500,
+                  //         width: (orientation == Orientation.landscape)
+                  //             ? 500
+                  //             : 500),
+                  //   ),
                 ]);
               },
             );
