@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
 
+import 'widgets/restart_resume.dart';
 import 'widgets/answer_widget.dart';
 import 'widgets/question_widget.dart';
 import 'widgets/result_widget.dart';
@@ -38,6 +39,7 @@ class _MyAppState extends State<MyApp> {
   bool questionAppeared = false;
   int? pausedOn;
   bool autoPlay = true;
+  bool isOver = false;
   final VideoPlayerController vController =
       VideoPlayerController.asset('assets/videos/jjk.mp4');
   // final VideoPlayerController vController = VideoPlayerController.networkUrl(
@@ -45,6 +47,18 @@ class _MyAppState extends State<MyApp> {
   //     'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
   //   ),
   // );
+
+  void setIsOver() {
+    setState(() {
+      isOver = false;
+    });
+  }
+
+  void resetQuestionAppeared() {
+    setState(() {
+      questionAppeared = false;
+    });
+  }
 
   void resetQuestion() {
     setState(() {
@@ -85,6 +99,13 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void restartQuiz() {
+    setState(() {
+      vController.seekTo(const Duration(seconds: 0));
+      vController.play();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -92,7 +113,7 @@ class _MyAppState extends State<MyApp> {
         backgroundColor: Colors.blueGrey[100],
         appBar: MediaQuery.of(context).orientation == Orientation.portrait
             ? AppBar(
-                title: Text('Quizzler $selectedIndex',
+                title: const Text('Quizzler',
                     style: TextStyle(color: Colors.white)),
                 backgroundColor: Colors.blueGrey[900],
               )
@@ -137,17 +158,50 @@ class _MyAppState extends State<MyApp> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.25,
                           ),
-                        SizedBox(
-                          height: 500,
-                          width: 500,
-                          child: Lottie.asset(
-                            'assets/animations/watchingCat.json',
-                            repeat: true,
-                            animate: true,
+                        if (isOver)
+                          SizedBox(
                             height: 500,
                             width: 500,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 10),
+                                const Text(
+                                  'Quiz Complete!!',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                ResultWidget(
+                                  resetQuestion: () {},
+                                  height: 400.0,
+                                  width: 400.0,
+                                  isTimeUp: true,
+                                  isCorrect: false,
+                                  animationPath:
+                                      'assets/animations/happy-fox.json',
+                                  setIsOver: setIsOver,
+                                ),
+                              ],
+                            ),
+                          )
+                        else if (controller.currentIndex == -1)
+                          RestartResume(
+                              vController: vController,
+                              resetQuestionAppeared: resetQuestionAppeared,
+                              resetQuestionIndex: controller.restartQuiz)
+                        else
+                          SizedBox(
+                            height: 500,
+                            width: 500,
+                            child: Lottie.asset(
+                              'assets/animations/watchingCat.json',
+                              repeat: true,
+                              animate: true,
+                              height: 500,
+                              width: 500,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -364,7 +418,14 @@ class _MyAppState extends State<MyApp> {
 
                                                   questionAppeared = false;
                                                 });
-                                                vController.play();
+                                                if (controller.currentIndex !=
+                                                    -1) {
+                                                  vController.play();
+                                                } else {
+                                                  setState(() {
+                                                    isOver = true;
+                                                  });
+                                                }
                                               } else if (isTimeUp) {
                                                 controller.nextQuestion();
                                                 setState(() {

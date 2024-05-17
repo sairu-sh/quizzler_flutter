@@ -7,10 +7,14 @@ class ResultWidget extends StatefulWidget {
   double width;
   double height;
   bool isTimeUp;
+  String? animationPath;
+  final VoidCallback? setIsOver;
 
   ResultWidget(
       {super.key,
       required this.isCorrect,
+      this.animationPath,
+      this.setIsOver,
       required this.isTimeUp,
       required this.resetQuestion,
       required this.height,
@@ -39,6 +43,9 @@ class _ResultWidgetState extends State<ResultWidget>
           _controller.forward(from: 0.0);
         } else {
           widget.resetQuestion();
+          if (widget.setIsOver != null) {
+            widget.setIsOver!(); // Call the callback if it has been passed
+          }
         }
       }
     });
@@ -48,11 +55,12 @@ class _ResultWidgetState extends State<ResultWidget>
   @override
   Widget build(BuildContext context) {
     String getAnimationPath() {
-      return widget.isTimeUp
-          ? 'assets/animations/timeup.json'
-          : widget.isCorrect!
-              ? 'assets/animations/confetti.json'
-              : 'assets/animations/wrong.json';
+      return widget.animationPath ??
+          (widget.isTimeUp
+              ? 'assets/animations/timeup.json'
+              : widget.isCorrect!
+                  ? 'assets/animations/confetti.json'
+                  : 'assets/animations/oops.json');
     }
 
     return Lottie.asset(

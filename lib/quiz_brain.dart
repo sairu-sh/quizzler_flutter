@@ -42,10 +42,21 @@ class QuizBrain with ChangeNotifier {
     return questions[_currentQuestionIndex].correctAnswerIndex == index;
   }
 
+  void restartQuiz() {
+    _currentQuestionIndex = 0;
+    notifyListeners();
+  }
+
   bool get isLoading => _isLoading;
   int get currentIndex => _currentQuestionIndex;
-  int get correctAnswerIndex =>
-      questions[_currentQuestionIndex].correctAnswerIndex;
+  int get correctAnswerIndex {
+    if (_currentQuestionIndex != -1) {
+      return questions[_currentQuestionIndex].correctAnswerIndex;
+    } else {
+      return -1;
+    }
+  }
+
   String get currentQuestion =>
       questions.isNotEmpty && _currentQuestionIndex != -1
           ? (questions[_currentQuestionIndex].questionText)
@@ -61,7 +72,7 @@ class QuizBrain with ChangeNotifier {
         return {'list': currentQuestion.answerImages!, 'isAnswerImages': true};
       }
     }
-    return {'list': [], 'isAnswerImages': false};
+    return {'list': <String>[], 'isAnswerImages': false};
   }
 
   String get currentQuestionImage =>
