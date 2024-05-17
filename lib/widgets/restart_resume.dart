@@ -6,20 +6,28 @@ class RestartResume extends StatelessWidget {
   final VideoPlayerController vController;
   final VoidCallback resetQuestionIndex;
   final VoidCallback resetQuestionAppeared;
-  const RestartResume({
+  bool isPortrait;
+
+  RestartResume({
     super.key,
     required this.vController,
+    required this.isPortrait,
     required this.resetQuestionAppeared,
     required this.resetQuestionIndex,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.5,
+    return Container(
+      color: Colors.grey.shade300,
+      height: isPortrait
+          ? MediaQuery.of(context).size.height * 0.65
+          : MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: [
+          if (!isPortrait)
+            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
@@ -30,6 +38,10 @@ class RestartResume extends StatelessWidget {
                   color: Color(0xFF4a4a4a)),
             ),
           ),
+          SizedBox(
+              height: isPortrait
+                  ? MediaQuery.of(context).size.height * 0.05
+                  : MediaQuery.of(context).size.height * 0.1),
           Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Expanded(
               child: Padding(
