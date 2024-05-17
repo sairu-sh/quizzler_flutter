@@ -30,14 +30,13 @@ class _ResultWidgetState extends State<ResultWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration:
-          const Duration(seconds: 2), // Set your desired animation duration
+      duration: const Duration(seconds: 2),
     );
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _playCount++;
         if (_playCount < 2) {
-          _controller.forward(from: 0.0); // Play the animation again
+          _controller.forward(from: 0.0);
         } else {
           widget.resetQuestion();
         }
