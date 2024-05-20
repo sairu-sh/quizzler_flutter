@@ -80,7 +80,7 @@ class _QuizContentState extends State<QuizContent> {
               height: MediaQuery.of(context).size.height * 0.25,
             ),
           Container(
-            color: Colors.grey[300],
+            color: Colors.amber[300],
             constraints: BoxConstraints(
               minHeight: MediaQuery.of(context).size.height,
             ),
@@ -163,7 +163,8 @@ class _QuizContentState extends State<QuizContent> {
                                     selectedIndex: selectedIndex,
                                     correctIndex:
                                         widget.controller.correctAnswerIndex,
-                                    setIsPressed: widget.setIsPressed,
+                                    // setIsPressed: widget.setIsPressed,
+                                    questionAppeared: widget.questionAppeared,
                                   ),
                                 ),
                             ],
@@ -204,7 +205,8 @@ class _QuizContentState extends State<QuizContent> {
                             .indexOf(answer),
                         selectedIndex: selectedIndex,
                         correctIndex: widget.controller.correctAnswerIndex,
-                        setIsPressed: widget.setIsPressed,
+                        // setIsPressed: widget.setIsPressed,
+                        questionAppeared: widget.questionAppeared,
                       );
                     }).toList(),
                   ),
@@ -224,6 +226,7 @@ class _QuizContentState extends State<QuizContent> {
                         // color: Colors.blue,
                       ),
                       child: CountDownTimer(
+                          questionAppeared: widget.questionAppeared,
                           setSelectedIndex: setSelectedIndex,
                           correctIndex: widget.controller.correctAnswerIndex,
                           setIsTimeUp: widget.setIsTimeUp,
@@ -267,13 +270,11 @@ class _QuizContentState extends State<QuizContent> {
                                 widget.setShowAnimation(true);
                               }
 
-                              widget.setIsPressed(true);
+                              // widget.setIsPressed(true);
                             },
-                      text: widget.isTimeUp
+                      text: widget.isTimeUp || widget.isAnswered
                           ? 'Continue'
-                          : !widget.isAnswered
-                              ? 'Check'
-                              : 'Continue',
+                          : 'Check',
                       isPressed: widget.isPressed,
                       buttonColor: selectedIndex == -1
                           ? Colors.grey[300]!

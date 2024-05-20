@@ -119,8 +119,12 @@ class _QuizzlerState extends State<Quizzler> {
                     vController: vController,
                   ),
                 ),
-                Visibility(
-                  visible: !questionAppeared,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  color: Colors.red,
+                  height: !questionAppeared
+                      ? MediaQuery.of(context).size.height
+                      : 0,
                   child: Column(
                     children: [
                       SizedBox(
@@ -183,29 +187,33 @@ class _QuizzlerState extends State<Quizzler> {
                     ],
                   ),
                 ),
-                Visibility(
-                    visible: questionAppeared && controller.currentIndex != -1,
-                    child: QuizContent(
-                      orientation: orientation,
-                      controller: controller,
-                      isTimeUp: isTimeUp,
-                      isAnswered: isAnswered,
-                      isOver: isOver,
-                      showAnimation: showAnimation,
-                      isCorrect: isCorrect,
-                      isPressed: isPressed,
-                      questionAppeared: questionAppeared,
-                      setIsCorrect: setIsCorrect,
-                      setIsPressed: setIsPressed,
-                      setIsAnswered: setIsAnswered,
-                      setIsOver: setIsOver,
-                      setIsTimeUp: setIsTimeUp,
-                      setShowAnimation: setShowAnimation,
-                      setQuestionAppeared: setQuestionAppeared,
-                      vController: vController,
-                    )
-                    // ),
-                    ),
+                if (controller.currentIndex != -1)
+                  AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      height: questionAppeared && controller.currentIndex != -1
+                          ? MediaQuery.of(context).size.height
+                          : 0,
+                      child: QuizContent(
+                        orientation: orientation,
+                        controller: controller,
+                        isTimeUp: isTimeUp,
+                        isAnswered: isAnswered,
+                        isOver: isOver,
+                        showAnimation: showAnimation,
+                        isCorrect: isCorrect,
+                        isPressed: isPressed,
+                        questionAppeared: questionAppeared,
+                        setIsCorrect: setIsCorrect,
+                        setIsPressed: setIsPressed,
+                        setIsAnswered: setIsAnswered,
+                        setIsOver: setIsOver,
+                        setIsTimeUp: setIsTimeUp,
+                        setShowAnimation: setShowAnimation,
+                        setQuestionAppeared: setQuestionAppeared,
+                        vController: vController,
+                      )
+                      // ),
+                      ),
                 if (showAnimation)
                   Positioned(
                     top: MediaQuery.of(context).size.height * 0.5 - 250,

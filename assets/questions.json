@@ -5,5 +5,28 @@
     "answers": ["Angular", "React", "Svelte", "Vue"],
     "correctAnswerIndex": 1,
     "pausedOn": 5
+  },
+  {
+    "questionText": "What's the fundamental building block of React apps?",
+    "answers": ["Components", "Blocks", "Elements", "Effects"],
+    "correctAnswerIndex": 0,
+    "pausedOn": 10
+  },
+  {
+    "questionText": "What's the name of the syntax we use to describe the UI in React components?",
+    "answers": ["FBJ", "Babel", "JSX", "ES2015"],
+    "correctAnswerIndex": 2,
+    "pausedOn": 15
+  },
+  {
+    "questionText": "How does data flow naturally in React apps?",
+    "answers": [
+      "From parents to children",
+      "From children to parents",
+      "Both ways",
+      "The developers decides"
+    ],
+    "correctAnswerIndex": 0,
+    "pausedOn": 20
   }
 ]

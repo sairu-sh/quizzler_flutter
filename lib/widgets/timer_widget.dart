@@ -5,12 +5,13 @@ class CountDownTimer extends StatefulWidget {
   final Function(bool) setIsTimeUp;
   final Function(bool) setShowAnimation;
   final Function(bool) setIsAnswered;
+  final Function(int) setSelectedIndex;
   final int currentQuestionIndex;
+  final bool questionAppeared;
   final int time;
   final bool isAnswered;
   final bool isTimeUp;
   final int correctIndex;
-  final Function(int) setSelectedIndex;
 
   const CountDownTimer(
       {super.key,
@@ -22,6 +23,7 @@ class CountDownTimer extends StatefulWidget {
       required this.setSelectedIndex,
       required this.isAnswered,
       required this.currentQuestionIndex,
+      required this.questionAppeared,
       required this.time});
   @override
   State<CountDownTimer> createState() => _CountDownTimerState();
@@ -49,7 +51,7 @@ class _CountDownTimerState extends State<CountDownTimer>
     );
     controller.forward();
     controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
+      if (status == AnimationStatus.completed && widget.questionAppeared) {
         widget.setIsAnswered(true);
         widget.setIsTimeUp(!widget.isTimeUp);
         widget.setShowAnimation(true);
@@ -64,7 +66,8 @@ class _CountDownTimerState extends State<CountDownTimer>
     if (widget.isAnswered && !oldWidget.isAnswered) {
       controller.stop();
     }
-    if (widget.currentQuestionIndex != oldWidget.currentQuestionIndex) {
+    if (widget.currentQuestionIndex != oldWidget.currentQuestionIndex ||
+        widget.questionAppeared != oldWidget.questionAppeared) {
       controller.reset();
       controller.forward();
     }
