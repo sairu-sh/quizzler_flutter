@@ -5,9 +5,9 @@ class Button extends StatelessWidget {
   final String text;
   final Color? textColor;
   final Color? buttonColor;
-  bool isPressed;
+  final bool isPressed;
 
-  Button(
+  const Button(
       {super.key,
       required this.onPressed,
       required this.text,

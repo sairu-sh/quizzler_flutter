@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class CountDownTimer extends StatefulWidget {
-  VoidCallback timeUp;
-  int currentQuestionIndex;
-  int time;
-  bool isAnswered;
-  int correctIndex;
+  final Function(bool) setIsTimeUp;
+  final Function(bool) setShowAnimation;
+  final Function(bool) setIsAnswered;
+  final int currentQuestionIndex;
+  final int time;
+  final bool isAnswered;
+  final bool isTimeUp;
+  final int correctIndex;
   final Function(int) setSelectedIndex;
 
-  CountDownTimer(
+  const CountDownTimer(
       {super.key,
-      required this.timeUp,
+      required this.setIsTimeUp,
+      required this.isTimeUp,
+      required this.setShowAnimation,
+      required this.setIsAnswered,
       required this.correctIndex,
       required this.setSelectedIndex,
       required this.isAnswered,
@@ -44,7 +50,9 @@ class _CountDownTimerState extends State<CountDownTimer>
     controller.forward();
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        widget.timeUp();
+        widget.setIsAnswered(true);
+        widget.setIsTimeUp(!widget.isTimeUp);
+        widget.setShowAnimation(true);
         widget.setSelectedIndex(widget.correctIndex);
       }
     });

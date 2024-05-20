@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import 'question.dart';
+import '../models/question.dart';
 
 class QuizBrain with ChangeNotifier {
   List<Question> questions = [];

@@ -3,20 +3,22 @@ import 'package:lottie/lottie.dart';
 
 class ResultWidget extends StatefulWidget {
   final bool? isCorrect;
-  final VoidCallback resetQuestion;
-  double width;
-  double height;
-  bool isTimeUp;
-  String? animationPath;
-  final VoidCallback? setIsOver;
+  final double width;
+  final double height;
+  final bool isTimeUp;
+  final String? animationPath;
+  final Function(bool)? setIsOver;
+  final Function(bool)? setIsPressed;
+  final Function(bool)? setShowAnimation;
 
-  ResultWidget(
+  const ResultWidget(
       {super.key,
       required this.isCorrect,
       this.animationPath,
       this.setIsOver,
+      this.setIsPressed,
+      this.setShowAnimation,
       required this.isTimeUp,
-      required this.resetQuestion,
       required this.height,
       required this.width});
 
@@ -42,9 +44,10 @@ class _ResultWidgetState extends State<ResultWidget>
         if (_playCount < 2) {
           _controller.forward(from: 0.0);
         } else {
-          widget.resetQuestion();
+          widget.setShowAnimation!(false);
+          widget.setIsPressed!(false);
           if (widget.setIsOver != null) {
-            widget.setIsOver!(); // Call the callback if it has been passed
+            widget.setIsOver!(false);
           }
         }
       }

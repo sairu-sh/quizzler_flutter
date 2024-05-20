@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 class AnswerButton extends StatefulWidget {
   final String answerText;
   final VoidCallback onPressed;
-  final VoidCallback raiseButton;
-  String color;
-  bool isAnswered;
-  int selectedIndex;
-  int index;
-  int correctIndex;
-  int currentIndex;
-  bool isTimeUp;
-  bool isAnswerImages;
+  final Function(bool) setIsPressed;
+  final String color;
+  final bool isAnswered;
+  final int selectedIndex;
+  final int index;
+  final int correctIndex;
+  final int currentIndex;
+  final bool isTimeUp;
+  final bool isAnswerImages;
 
-  AnswerButton({
+  const AnswerButton({
     super.key,
     required this.answerText,
     required this.onPressed,
@@ -24,7 +24,7 @@ class AnswerButton extends StatefulWidget {
     required this.selectedIndex,
     required this.index,
     required this.currentIndex,
-    required this.raiseButton,
+    required this.setIsPressed,
     required this.isTimeUp,
   });
 
@@ -75,7 +75,7 @@ class _AnswerButtonState extends State<AnswerButton>
     if (oldWidget.currentIndex != widget.currentIndex) {
       _controller.reset();
       _controller.forward();
-      widget.raiseButton();
+      widget.setIsPressed(false);
     }
   }
 
