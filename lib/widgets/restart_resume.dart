@@ -5,14 +5,14 @@ import 'package:video_player/video_player.dart';
 class RestartResume extends StatelessWidget {
   final VideoPlayerController vController;
   final VoidCallback resetQuestionIndex;
-  final VoidCallback resetQuestionAppeared;
-  bool isPortrait;
+  final Function(bool) setQuestionAppeared;
+  final bool isPortrait;
 
-  RestartResume({
+  const RestartResume({
     super.key,
     required this.vController,
     required this.isPortrait,
-    required this.resetQuestionAppeared,
+    required this.setQuestionAppeared,
     required this.resetQuestionIndex,
   });
 
@@ -43,9 +43,13 @@ class RestartResume extends StatelessWidget {
                   ? MediaQuery.of(context).size.height * 0.05
                   : MediaQuery.of(context).size.height * 0.1),
           Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Expanded(
+            Flexible(
+              flex: isPortrait ? 1 : 2,
               child: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
+                padding: EdgeInsets.only(
+                    left: isPortrait
+                        ? 10.0
+                        : MediaQuery.of(context).size.width * 0.1),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +58,7 @@ class RestartResume extends StatelessWidget {
                           onPressed: () {
                             vController.seekTo(const Duration(seconds: 0));
                             resetQuestionIndex();
-                            resetQuestionAppeared();
+                            setQuestionAppeared(false);
                             vController.play();
                           },
                           child: const Text('Restart Quiz')),
@@ -69,7 +73,10 @@ class RestartResume extends StatelessWidget {
                     ]),
               ),
             ),
-            Expanded(
+            if (!isPortrait)
+              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+            Flexible(
+              flex: 1,
               child: SizedBox(
                 height: 200,
                 width: 200,

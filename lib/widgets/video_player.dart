@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
-  VoidCallback pauseVideo;
-  VoidCallback setisAnswered;
-  int pauseOn;
-  bool questionAppeared;
-  bool isAnswered;
+  final Function(bool) setQuestionAppeared;
+  final Function(bool) setisAnswered;
+  final Function(bool) setIsTimeUp;
+  final int pauseOn;
+  final bool questionAppeared;
+  final bool isAnswered;
   final VideoPlayerController vController;
 
-  VideoPlayerScreen(
+  const VideoPlayerScreen(
       {super.key,
-      required this.pauseVideo,
+      required this.setQuestionAppeared,
       required this.setisAnswered,
+      required this.setIsTimeUp,
       required this.pauseOn,
       required this.questionAppeared,
       required this.vController,
@@ -47,13 +49,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   void _checkVideoPosition() {
-    print('video player position ${_controller.value.position}');
+    print('video position ${_controller.value.position}');
+    print('pause on ${widget.pauseOn}');
     if (_controller.value.position >= Duration(seconds: widget.pauseOn) &&
         !widget.isAnswered &&
         widget.pauseOn != -1) {
       _controller.pause();
-      widget.pauseVideo();
-      widget.setisAnswered();
+      widget.setQuestionAppeared(true);
+      widget.setisAnswered(false);
+      widget.setIsTimeUp(false);
     }
   }
 
