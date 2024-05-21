@@ -80,10 +80,12 @@ class _QuizContentState extends State<QuizContent> {
               height: MediaQuery.of(context).size.height * 0.25,
             ),
           Container(
-            color: Colors.amber[300],
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
+            color: Colors.grey[300],
+            constraints: widget.orientation == Orientation.landscape
+                ? BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height,
+                  )
+                : const BoxConstraints(),
             child: Column(
               children: [
                 widget.controller.isLoading
