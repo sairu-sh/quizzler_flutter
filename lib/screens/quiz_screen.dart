@@ -30,7 +30,7 @@ class _QuizzlerState extends State<Quizzler> {
       VideoPlayerController.asset('assets/videos/jjk.mp4');
   // final VideoPlayerController vController = VideoPlayerController.networkUrl(
   //   Uri.parse(
-  //     'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+  //     'https://www.youtube.com/watch?v=pmanD_s7G3U',
   //   ),
   // );
 
@@ -82,8 +82,8 @@ class _QuizzlerState extends State<Quizzler> {
       backgroundColor: Colors.blueGrey[100],
       appBar: MediaQuery.of(context).orientation == Orientation.portrait
           ? AppBar(
-              title:
-                  const Text('Quizzler', style: TextStyle(color: Colors.white)),
+              title: Text('Quizzler $isOver',
+                  style: TextStyle(color: Colors.white)),
               backgroundColor: Colors.blueGrey[900],
             )
           : PreferredSize(
@@ -119,8 +119,12 @@ class _QuizzlerState extends State<Quizzler> {
                     vController: vController,
                   ),
                 ),
-                Visibility(
-                  visible: !questionAppeared,
+                SizedBox(
+                  // duration: const Duration(milliseconds: 10000),
+                  // color: Colors.blueGrey[100],
+                  height: !questionAppeared
+                      ? MediaQuery.of(context).size.height
+                      : 0,
                   child: Column(
                     children: [
                       SizedBox(
@@ -130,15 +134,17 @@ class _QuizzlerState extends State<Quizzler> {
                       ),
                       if (isOver)
                         AnimatedContainer(
-                          duration: const Duration(milliseconds: 400),
-                          color: Colors.blueGrey[300],
-                          height: orientation == Orientation.portrait
-                              ? 500
-                              : MediaQuery.of(context).size.height,
+                          duration: const Duration(milliseconds: 1000),
+                          color: Colors.grey[300],
+                          height: isOver
+                              ? orientation == Orientation.portrait
+                                  ? 500
+                                  : MediaQuery.of(context).size.height
+                              : 0,
                           width: MediaQuery.of(context).size.width,
                           child: Column(
                             children: [
-                              const SizedBox(height: 10),
+                              SizedBox(height: questionAppeared ? 10 : 0),
                               const Text(
                                 'Quiz Complete!!',
                                 style: TextStyle(
@@ -162,7 +168,7 @@ class _QuizzlerState extends State<Quizzler> {
                             ],
                           ),
                         )
-                      else if (controller.currentIndex == -1)
+                      else if (controller.currentIndex == -1 && !isOver)
                         RestartResume(
                             isPortrait: orientation == Orientation.portrait,
                             vController: vController,
@@ -183,29 +189,35 @@ class _QuizzlerState extends State<Quizzler> {
                     ],
                   ),
                 ),
-                Visibility(
-                    visible: questionAppeared && controller.currentIndex != -1,
-                    child: QuizContent(
-                      orientation: orientation,
-                      controller: controller,
-                      isTimeUp: isTimeUp,
-                      isAnswered: isAnswered,
-                      isOver: isOver,
-                      showAnimation: showAnimation,
-                      isCorrect: isCorrect,
-                      isPressed: isPressed,
-                      questionAppeared: questionAppeared,
-                      setIsCorrect: setIsCorrect,
-                      setIsPressed: setIsPressed,
-                      setIsAnswered: setIsAnswered,
-                      setIsOver: setIsOver,
-                      setIsTimeUp: setIsTimeUp,
-                      setShowAnimation: setShowAnimation,
-                      setQuestionAppeared: setQuestionAppeared,
-                      vController: vController,
-                    )
-                    // ),
-                    ),
+                if (controller.currentIndex != -1)
+                  AnimatedContainer(
+                      duration: Duration(
+                          milliseconds:
+                              orientation == Orientation.landscape ? 500 : 0),
+                      height: questionAppeared && controller.currentIndex != -1
+                          ? MediaQuery.of(context).size.height
+                          : 0,
+                      child: QuizContent(
+                        orientation: orientation,
+                        controller: controller,
+                        isTimeUp: isTimeUp,
+                        isAnswered: isAnswered,
+                        isOver: isOver,
+                        showAnimation: showAnimation,
+                        isCorrect: isCorrect,
+                        isPressed: isPressed,
+                        questionAppeared: questionAppeared,
+                        setIsCorrect: setIsCorrect,
+                        setIsPressed: setIsPressed,
+                        setIsAnswered: setIsAnswered,
+                        setIsOver: setIsOver,
+                        setIsTimeUp: setIsTimeUp,
+                        setShowAnimation: setShowAnimation,
+                        setQuestionAppeared: setQuestionAppeared,
+                        vController: vController,
+                      )
+                      // ),
+                      ),
                 if (showAnimation)
                   Positioned(
                     top: MediaQuery.of(context).size.height * 0.5 - 250,

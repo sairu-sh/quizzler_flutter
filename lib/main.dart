@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           '/first': (context) => const Quizzler()
         },
         theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
+          primarySwatch: Colors.red,
         ),
       ),
     );

@@ -5,5 +5,11 @@
     "answers": ["Angular", "React", "Svelte", "Vue"],
     "correctAnswerIndex": 1,
     "pausedOn": 5
+  },
+  {
+    "questionText": "What's the fundamental building block of React apps?",
+    "answers": ["Components", "Blocks", "Elements", "Effects"],
+    "correctAnswerIndex": 0,
+    "pausedOn": 10
   }
 ]
