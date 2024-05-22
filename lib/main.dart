@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_animation/controllers/video_list.dart';
 import 'package:provider/provider.dart';
 import 'app.dart';
 import 'controllers/quiz_brain.dart';
@@ -13,14 +14,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<QuizBrain>(
-      create: (_) => QuizBrain(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<QuizBrain>(create: (_) => QuizBrain()),
+        ChangeNotifierProvider<VideoList>(create: (_) => VideoList()),
+      ],
       child: MaterialApp(
         title: 'Quizzler',
         initialRoute: '/',
         routes: {
           '/': (context) => const App(),
-          '/first': (context) => const Quizzler()
+          '/first': (context) {
+            final args = ModalRoute.of(context)!.settings.arguments
+                as Map<String, dynamic>;
+            return Quizzler(index: args['index']);
+          },
         },
         theme: ThemeData(
           primarySwatch: Colors.red,

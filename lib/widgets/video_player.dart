@@ -27,7 +27,6 @@ class VideoPlayerScreen extends StatefulWidget {
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
-  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -41,16 +40,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     _controller.addListener(_checkVideoPosition);
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-    _isDisposed = true;
-  }
-
   void _checkVideoPosition() {
-    print('video position ${_controller.value.position}');
-    print('pause on ${widget.pauseOn}');
     if (_controller.value.position >= Duration(seconds: widget.pauseOn) &&
         !widget.isAnswered &&
         widget.pauseOn != -1) {
@@ -62,9 +52,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   Future<Duration?> get position async {
-    if (_isDisposed) {
-      return null;
-    }
+    // if (_isDisposed) {
+    //   return null;
+    // }
     return widget.vController.value.position;
   }
 

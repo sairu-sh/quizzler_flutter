@@ -120,6 +120,16 @@ class _RestartResumeState extends State<RestartResume>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Button(
+                          isPressed: isPressed,
+                          onPressed: () {
+                            setIsPressed(true);
+                            widget.vController.play();
+                          },
+                          text: 'Continue watching',
+                          buttonColor: Colors.cyan[400],
+                        ),
+                        const SizedBox(height: 15),
+                        Button(
                             isPressed: isPressed,
                             onPressed: () {
                               setIsPressed(true);
@@ -133,18 +143,13 @@ class _RestartResumeState extends State<RestartResume>
                             text: 'Restart Quiz'),
                         const SizedBox(height: 15),
                         Button(
-                          isPressed: isPressed,
-                          onPressed: () {
-                            setIsPressed(true);
-                            widget.vController.play();
-                          },
-                          text: 'Continue watching',
-                          buttonColor: Colors.cyan[400],
-                        ),
-                        const SizedBox(height: 15),
-                        Button(
                             onPressed: () {
                               setIsPressed(true);
+                              widget.vController
+                                  .seekTo(const Duration(seconds: 0));
+                              widget.resetQuestionIndex();
+                              widget.setQuestionAppeared(false);
+                              Navigator.pushNamed(context, '/');
                             },
                             text: 'Choose another',
                             isPressed: isPressed,

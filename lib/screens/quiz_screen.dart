@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:video_player/video_player.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
 
@@ -11,7 +10,9 @@ import '../widgets/quiz_content.dart';
 import '../controllers/quiz_brain.dart';
 
 class Quizzler extends StatefulWidget {
-  const Quizzler({super.key});
+  final int index;
+
+  const Quizzler({required this.index, super.key});
 
   @override
   State<Quizzler> createState() => _QuizzlerState();
@@ -25,14 +26,29 @@ class _QuizzlerState extends State<Quizzler> {
   bool showAnimation = false;
   bool isPressed = false;
   bool isCorrect = false;
+  int pauseOn = -1;
 
-  final VideoPlayerController vController =
-      VideoPlayerController.asset('assets/videos/jjk.mp4');
-  // final VideoPlayerController vController = VideoPlayerController.networkUrl(
-  //   Uri.parse(
-  //     'https://www.youtube.com/watch?v=pmanD_s7G3U',
-  //   ),
-  // );
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<QuizBrain>(context, listen: false)
+          .setIndexAndLoadQuestions(widget.index);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void setPauseOn(int value) {
+    if (mounted) {
+      setState(() {
+        pauseOn = value;
+      });
+    }
+  }
 
   void setIsOver(bool value) {
     setState(() {
@@ -41,9 +57,11 @@ class _QuizzlerState extends State<Quizzler> {
   }
 
   void setIsPressed(bool value) {
-    setState(() {
-      isPressed = value;
-    });
+    if (mounted) {
+      setState(() {
+        isPressed = value;
+      });
+    }
   }
 
   void setShowAnimation(bool value) {
@@ -59,31 +77,37 @@ class _QuizzlerState extends State<Quizzler> {
   }
 
   void setQuestionAppeared(bool value) {
-    setState(() {
-      questionAppeared = value;
-    });
+    if (mounted) {
+      setState(() {
+        questionAppeared = value;
+      });
+    }
   }
 
   void setIsAnswered(bool value) {
-    setState(() {
-      isAnswered = value;
-    });
+    if (mounted) {
+      setState(() {
+        isAnswered = value;
+      });
+    }
   }
 
   void setIsTimeUp(bool value) {
-    setState(() {
-      isTimeUp = value;
-    });
+    if (mounted) {
+      setState(() {
+        isTimeUp = value;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Provider.of<QuizBrain>(context, listen: false).setIndex(widget.index);
     return Scaffold(
       backgroundColor: Colors.blueGrey[100],
       appBar: MediaQuery.of(context).orientation == Orientation.portrait
           ? AppBar(
-              title: Text('Quizzler $isOver',
-                  style: TextStyle(color: Colors.white)),
+              title: Text('Quizzler', style: TextStyle(color: Colors.white)),
               backgroundColor: Colors.blueGrey[900],
             )
           : PreferredSize(
@@ -92,7 +116,8 @@ class _QuizzlerState extends State<Quizzler> {
             ),
       body: Consumer<QuizBrain>(
         builder: (context, controller, child) {
-          if (controller.isLoading) {
+          if (controller.isLoading ||
+              !controller.videoPlayerController.value.isInitialized) {
             return const Center(child: CircularProgressIndicator());
           }
           return OrientationBuilder(
@@ -110,13 +135,14 @@ class _QuizzlerState extends State<Quizzler> {
                       ? MediaQuery.of(context).size.height
                       : MediaQuery.of(context).size.height * 0.25,
                   child: VideoPlayerScreen(
+                    pauseOn: pauseOn != -1 ? pauseOn : controller.pauseOn,
                     setQuestionAppeared: setQuestionAppeared,
                     questionAppeared: questionAppeared,
-                    pauseOn: controller.pauseOn,
+                    // pauseOn: controller.pauseOn,
                     isAnswered: isAnswered,
                     setisAnswered: setIsAnswered,
                     setIsTimeUp: setIsTimeUp,
-                    vController: vController,
+                    vController: controller.videoPlayerController,
                   ),
                 ),
                 SizedBox(
@@ -168,10 +194,10 @@ class _QuizzlerState extends State<Quizzler> {
                             ],
                           ),
                         )
-                      else if (controller.currentIndex == -1 && !isOver)
+                      else if (controller.currentIndex == -1)
                         RestartResume(
                             isPortrait: orientation == Orientation.portrait,
-                            vController: vController,
+                            vController: controller.videoPlayerController,
                             setQuestionAppeared: setQuestionAppeared,
                             resetQuestionIndex: controller.restartQuiz)
                       else if (orientation == Orientation.portrait)
@@ -207,6 +233,7 @@ class _QuizzlerState extends State<Quizzler> {
                         isCorrect: isCorrect,
                         isPressed: isPressed,
                         questionAppeared: questionAppeared,
+                        setPauseOn: setPauseOn,
                         setIsCorrect: setIsCorrect,
                         setIsPressed: setIsPressed,
                         setIsAnswered: setIsAnswered,
@@ -214,7 +241,7 @@ class _QuizzlerState extends State<Quizzler> {
                         setIsTimeUp: setIsTimeUp,
                         setShowAnimation: setShowAnimation,
                         setQuestionAppeared: setQuestionAppeared,
-                        vController: vController,
+                        vController: controller.videoPlayerController,
                       )
                       // ),
                       ),
