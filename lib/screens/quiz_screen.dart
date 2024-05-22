@@ -215,7 +215,7 @@ class _QuizzlerState extends State<Quizzler> {
                     ],
                   ),
                 ),
-                if (controller.currentIndex != -1 && questionAppeared)
+                if (controller.currentIndex != -1)
                   AnimatedContainer(
                       duration: Duration(
                           milliseconds:
