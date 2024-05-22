@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:video_player/video_player.dart';
 import 'dart:convert';
 import '../models/question.dart';
 
@@ -7,8 +8,16 @@ class QuizBrain with ChangeNotifier {
   List<Question> questions = [];
   bool _isLoading = true;
   int _currentQuestionIndex = 0;
+  int _index = 0;
+  String videoName = '';
+  late VideoPlayerController videoPlayerController;
 
   QuizBrain() {
+    loadQuestions();
+  }
+
+  void setIndexAndLoadQuestions(int index) {
+    _index = index;
     loadQuestions();
   }
 
@@ -19,7 +28,14 @@ class QuizBrain with ChangeNotifier {
       final String response =
           await rootBundle.loadString('assets/questions.json');
       final List data = await json.decode(response) as List;
-      questions = data.map((item) => Question.fromJson(item)).toList();
+      final List questionsJson = data[_index]['questions'] as List;
+      videoName = data[_index]['video'] as String;
+      questions = questionsJson.map((item) => Question.fromJson(item)).toList();
+
+      videoPlayerController = VideoPlayerController.asset(videoName)
+        ..initialize().then((_) {
+          notifyListeners();
+        });
       _isLoading = false;
     } catch (e) {
       print('error $e occured');
@@ -27,6 +43,12 @@ class QuizBrain with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    videoPlayerController.dispose();
+    super.dispose();
   }
 
   void nextQuestion() {
@@ -79,6 +101,7 @@ class QuizBrain with ChangeNotifier {
       questions.isNotEmpty && _currentQuestionIndex != -1
           ? (questions[_currentQuestionIndex].questionImage ?? '')
           : 'No question loaded';
+
   int get pauseOn => _currentQuestionIndex != -1
       ? questions[_currentQuestionIndex].pausedOn
       : -1;

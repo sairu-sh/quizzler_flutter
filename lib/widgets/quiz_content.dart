@@ -25,6 +25,7 @@ class QuizContent extends StatefulWidget {
   final Function(bool) setIsPressed;
   final Function(bool) setIsCorrect;
   final Function(bool) setQuestionAppeared;
+  final Function(int) setPauseOn;
 
   const QuizContent({
     super.key,
@@ -45,6 +46,7 @@ class QuizContent extends StatefulWidget {
     required this.setIsCorrect,
     required this.questionAppeared,
     required this.setQuestionAppeared,
+    required this.setPauseOn,
   });
 
   @override
@@ -52,7 +54,6 @@ class QuizContent extends StatefulWidget {
 }
 
 class _QuizContentState extends State<QuizContent> {
-  // int selectedIndex = widget.selectedIndex;
   int selectedIndex = -1;
   int? pausedOn;
   bool autoPlay = true;
@@ -69,6 +70,11 @@ class _QuizContentState extends State<QuizContent> {
       widget.vController.play();
     });
   }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -253,6 +259,7 @@ class _QuizContentState extends State<QuizContent> {
                                   selectedIndex = -1;
                                 });
                                 if (widget.controller.currentIndex != -1) {
+                                  widget.setPauseOn(pausedOn!);
                                   widget.vController.play();
                                 } else {
                                   widget.setIsOver(true);
@@ -272,7 +279,7 @@ class _QuizContentState extends State<QuizContent> {
                                 widget.setShowAnimation(true);
                               }
 
-                              // widget.setIsPressed(true);
+                              widget.setIsPressed(true);
                             },
                       text: widget.isTimeUp || widget.isAnswered
                           ? 'Continue'

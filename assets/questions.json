@@ -1,15 +1,55 @@
 [
   {
-    "questionText": "Which is the most popular JavaScript framework?",
-    "questionImage": "robin2.jpg",
-    "answers": ["Angular", "React", "Svelte", "Vue"],
-    "correctAnswerIndex": 1,
-    "pausedOn": 5
+    "title": "Ju Jutsu Kaisen",
+    "video": "assets/videos/jjk.mp4",
+    "questions": [
+      {
+        "questionText": "Which is the most popular JavaScript framework?",
+        "questionImage": "robin2.jpg",
+        "answers": ["Angular", "React", "Svelte", "Vue"],
+        "correctAnswerIndex": 1,
+        "pausedOn": 5
+      },
+      {
+        "questionText": "What's the fundamental building block of React apps?",
+        "answers": ["Components", "Blocks", "Elements", "Effects"],
+        "correctAnswerIndex": 0,
+        "pausedOn": 10
+      }
+    ]
   },
   {
-    "questionText": "What's the fundamental building block of React apps?",
-    "answers": ["Components", "Blocks", "Elements", "Effects"],
-    "correctAnswerIndex": 0,
-    "pausedOn": 10
+    "title": "Demon Slayer",
+    "video": "assets/videos/DemonSlayer.mp4",
+    "questions": [
+      {
+        "questionText": "If we pass a function to useState, when will that function be called?",
+        "answers": [
+          "On each re-render",
+          "Each time we update the state",
+          "Only on the initial render",
+          "The first time we update the state"
+        ],
+        "correctAnswerIndex": 2,
+        "pausedOn": 5
+      },
+      {
+        "questionText": "Which hook to use for an API request on the component's initial render?",
+        "answers": ["useState", "useEffect", "useRef", "useReducer"],
+        "correctAnswerIndex": 1,
+        "pausedOn": 10
+      },
+      {
+        "questionText": "Which variables should go into the useEffect dependency array?",
+        "answers": [
+          "Usually none",
+          "All our state variables",
+          "All state and props referenced in the effect",
+          "All variables needed for clean up"
+        ],
+        "correctAnswerIndex": 2,
+        "pausedOn": 15
+      }
+    ]
   }
 ]
