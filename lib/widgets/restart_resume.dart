@@ -44,6 +44,8 @@ class _RestartResumeState extends State<RestartResume>
   void initState() {
     super.initState();
 
+    widget.vController.addListener(_videoPlayerListener);
+
     _textController = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
     _buttonsController = AnimationController(
@@ -73,16 +75,28 @@ class _RestartResumeState extends State<RestartResume>
     _textController.dispose();
     _buttonsController.dispose();
     _lottieController.dispose();
+    widget.vController.removeListener(_videoPlayerListener);
     super.dispose();
+  }
+
+  void _videoPlayerListener() {
+    if (mounted) {
+      setState(() {
+        // This will rebuild the widget when the video player state changes
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
       color: Colors.grey.shade300,
       height: widget.isPortrait
           ? MediaQuery.of(context).size.height * 0.65
-          : MediaQuery.of(context).size.height,
+          : widget.vController.value.isPlaying
+              ? 0
+              : MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: [

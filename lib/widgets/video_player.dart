@@ -5,7 +5,8 @@ class VideoPlayerScreen extends StatefulWidget {
   final Function(bool) setQuestionAppeared;
   final Function(bool) setisAnswered;
   final Function(bool) setIsTimeUp;
-  final int pauseOn;
+  final int Function() getPauseOn;
+  final int currentIndex;
   final bool questionAppeared;
   final bool isAnswered;
   final VideoPlayerController vController;
@@ -15,7 +16,8 @@ class VideoPlayerScreen extends StatefulWidget {
       required this.setQuestionAppeared,
       required this.setisAnswered,
       required this.setIsTimeUp,
-      required this.pauseOn,
+      required this.getPauseOn,
+      required this.currentIndex,
       required this.questionAppeared,
       required this.vController,
       required this.isAnswered});
@@ -41,9 +43,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   void _checkVideoPosition() {
-    if (_controller.value.position >= Duration(seconds: widget.pauseOn) &&
+    final pauseOn = widget.getPauseOn();
+    if (_controller.value.position >= Duration(seconds: pauseOn) &&
         !widget.isAnswered &&
-        widget.pauseOn != -1) {
+        pauseOn != -1) {
       _controller.pause();
       widget.setQuestionAppeared(true);
       widget.setisAnswered(false);
