@@ -10,10 +10,12 @@ class ResultWidget extends StatefulWidget {
   final Function(bool)? setIsOver;
   final Function(bool)? setIsPressed;
   final Function(bool)? setShowAnimation;
+  final Function(int)? setPauseOn;
 
   const ResultWidget(
       {super.key,
       required this.isCorrect,
+      this.setPauseOn,
       this.animationPath,
       this.setIsOver,
       this.setIsPressed,
@@ -48,6 +50,9 @@ class _ResultWidgetState extends State<ResultWidget>
           widget.setIsPressed!(false);
           if (widget.setIsOver != null) {
             widget.setIsOver!(false);
+          }
+          if (widget.setPauseOn != null) {
+            widget.setPauseOn!(-1);
           }
         }
       }

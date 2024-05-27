@@ -26,7 +26,7 @@ class _QuizzlerState extends State<Quizzler> {
   bool showAnimation = false;
   bool isPressed = false;
   bool isCorrect = false;
-  int pauseOn = -1;
+  // int pauseOn = -1;
 
   @override
   void initState() {
@@ -42,13 +42,13 @@ class _QuizzlerState extends State<Quizzler> {
     super.dispose();
   }
 
-  void setPauseOn(int value) {
-    if (mounted) {
-      setState(() {
-        pauseOn = value;
-      });
-    }
-  }
+  // void setPauseOn(int value) {
+  //   if (mounted) {
+  //     setState(() {
+  //       pauseOn = value;
+  //     });
+  //   }
+  // }
 
   void setIsOver(bool value) {
     setState(() {
@@ -107,7 +107,8 @@ class _QuizzlerState extends State<Quizzler> {
       backgroundColor: Colors.blueGrey[100],
       appBar: MediaQuery.of(context).orientation == Orientation.portrait
           ? AppBar(
-              title: Text('Quizzler', style: TextStyle(color: Colors.white)),
+              title:
+                  const Text('Quizzler', style: TextStyle(color: Colors.white)),
               backgroundColor: Colors.blueGrey[900],
             )
           : PreferredSize(
@@ -135,14 +136,14 @@ class _QuizzlerState extends State<Quizzler> {
                       ? MediaQuery.of(context).size.height
                       : MediaQuery.of(context).size.height * 0.25,
                   child: VideoPlayerScreen(
-                    pauseOn: pauseOn != -1 ? pauseOn : controller.pauseOn,
                     setQuestionAppeared: setQuestionAppeared,
                     questionAppeared: questionAppeared,
-                    // pauseOn: controller.pauseOn,
+                    getPauseOn: () => controller.pauseOn,
                     isAnswered: isAnswered,
                     setisAnswered: setIsAnswered,
                     setIsTimeUp: setIsTimeUp,
                     vController: controller.videoPlayerController,
+                    currentIndex: controller.currentIndex,
                   ),
                 ),
                 SizedBox(
@@ -233,7 +234,6 @@ class _QuizzlerState extends State<Quizzler> {
                         isCorrect: isCorrect,
                         isPressed: isPressed,
                         questionAppeared: questionAppeared,
-                        setPauseOn: setPauseOn,
                         setIsCorrect: setIsCorrect,
                         setIsPressed: setIsPressed,
                         setIsAnswered: setIsAnswered,
