@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
 
 import '../widgets/restart_resume.dart';
-import '../widgets/result_widget.dart';
+import '../widgets/lottie_animation.dart';
 import '../widgets/video_player.dart';
 import '../widgets/quiz_content.dart';
 import '../controllers/quiz_brain.dart';
@@ -23,10 +23,9 @@ class _QuizzlerState extends State<Quizzler> {
   bool isAnswered = false;
   bool isTimeUp = false;
   bool isOver = false;
-  bool showAnimation = false;
+  bool showAnimation = false; //show lottie animation for the result
   bool isPressed = false;
   bool isCorrect = false;
-  // int pauseOn = -1;
 
   @override
   void initState() {
@@ -41,14 +40,6 @@ class _QuizzlerState extends State<Quizzler> {
   void dispose() {
     super.dispose();
   }
-
-  // void setPauseOn(int value) {
-  //   if (mounted) {
-  //     setState(() {
-  //       pauseOn = value;
-  //     });
-  //   }
-  // }
 
   void setIsOver(bool value) {
     setState(() {
@@ -102,7 +93,6 @@ class _QuizzlerState extends State<Quizzler> {
 
   @override
   Widget build(BuildContext context) {
-    // Provider.of<QuizBrain>(context, listen: false).setIndex(widget.index);
     return Scaffold(
       backgroundColor: Colors.blueGrey[100],
       appBar: MediaQuery.of(context).orientation == Orientation.portrait
@@ -147,8 +137,6 @@ class _QuizzlerState extends State<Quizzler> {
                   ),
                 ),
                 SizedBox(
-                  // duration: const Duration(milliseconds: 10000),
-                  // color: Colors.blueGrey[100],
                   height: !questionAppeared
                       ? MediaQuery.of(context).size.height
                       : 0,
@@ -184,13 +172,12 @@ class _QuizzlerState extends State<Quizzler> {
                                     ? MediaQuery.of(context).size.height * 0.4
                                     : MediaQuery.of(context).size.height * 0.7,
                                 width: 400.0,
-                                isTimeUp: true,
-                                isCorrect: false,
                                 animationPath:
                                     'assets/animations/happy-fox.json',
                                 setIsOver: setIsOver,
                                 setShowAnimation: setShowAnimation,
                                 setIsPressed: setIsPressed,
+                                playCount: 2,
                               ),
                             ],
                           ),
@@ -242,16 +229,18 @@ class _QuizzlerState extends State<Quizzler> {
                         setShowAnimation: setShowAnimation,
                         setQuestionAppeared: setQuestionAppeared,
                         vController: controller.videoPlayerController,
-                      )
-                      // ),
-                      ),
+                      )),
                 if (showAnimation)
                   Positioned(
                     top: MediaQuery.of(context).size.height * 0.5 - 250,
                     left: MediaQuery.of(context).size.width * 0.5 - 250,
                     child: ResultWidget(
-                        isCorrect: isCorrect,
-                        isTimeUp: isTimeUp,
+                        playCount: 2,
+                        animationPath: isTimeUp
+                            ? 'assets/animations/timeup.json'
+                            : isCorrect
+                                ? 'assets/animations/confetti.json'
+                                : 'assets/animations/oops.json',
                         setShowAnimation: setShowAnimation,
                         setIsPressed: setIsPressed,
                         height:
