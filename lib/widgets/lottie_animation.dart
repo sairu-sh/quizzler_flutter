@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class ResultWidget extends StatefulWidget {
-  final bool? isCorrect;
   final double width;
   final double height;
-  final bool isTimeUp;
-  final String? animationPath;
+  final String animationPath;
+  final int? playCount;
   final Function(bool)? setIsOver;
   final Function(bool)? setIsPressed;
   final Function(bool)? setShowAnimation;
@@ -14,14 +13,13 @@ class ResultWidget extends StatefulWidget {
 
   const ResultWidget(
       {super.key,
-      required this.isCorrect,
       this.setPauseOn,
-      this.animationPath,
+      this.playCount,
       this.setIsOver,
       this.setIsPressed,
       this.setShowAnimation,
-      required this.isTimeUp,
       required this.height,
+      required this.animationPath,
       required this.width});
 
   @override
@@ -31,7 +29,8 @@ class ResultWidget extends StatefulWidget {
 class _ResultWidgetState extends State<ResultWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  int _playCount = 0;
+  double _playCount = 0;
+  late double limit;
 
   @override
   void initState() {
@@ -40,10 +39,15 @@ class _ResultWidgetState extends State<ResultWidget>
       vsync: this,
       duration: const Duration(seconds: 2),
     );
+
+    limit = widget.playCount != null
+        ? widget.playCount!.toDouble()
+        : double.infinity;
+
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _playCount++;
-        if (_playCount < 2) {
+        if (_playCount < limit) {
           _controller.forward(from: 0.0);
         } else {
           widget.setShowAnimation!(false);
@@ -62,17 +66,8 @@ class _ResultWidgetState extends State<ResultWidget>
 
   @override
   Widget build(BuildContext context) {
-    String getAnimationPath() {
-      return widget.animationPath ??
-          (widget.isTimeUp
-              ? 'assets/animations/timeup.json'
-              : widget.isCorrect!
-                  ? 'assets/animations/confetti.json'
-                  : 'assets/animations/oops.json');
-    }
-
     return Lottie.asset(
-      getAnimationPath(),
+      widget.animationPath,
       controller: _controller,
       repeat: true,
       animate: true,
@@ -83,7 +78,7 @@ class _ResultWidgetState extends State<ResultWidget>
 
   @override
   void dispose() {
-    _controller.dispose(); // Dispose the animation controller
+    _controller.dispose();
     super.dispose();
   }
 }
