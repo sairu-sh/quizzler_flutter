@@ -137,8 +137,6 @@ class _QuizzlerState extends State<Quizzler> {
                   ),
                 ),
                 SizedBox(
-                  // duration: const Duration(milliseconds: 10000),
-                  // color: Colors.blueGrey[100],
                   height: !questionAppeared
                       ? MediaQuery.of(context).size.height
                       : 0,
@@ -179,6 +177,7 @@ class _QuizzlerState extends State<Quizzler> {
                                 setIsOver: setIsOver,
                                 setShowAnimation: setShowAnimation,
                                 setIsPressed: setIsPressed,
+                                playCount: 2,
                               ),
                             ],
                           ),
@@ -230,9 +229,7 @@ class _QuizzlerState extends State<Quizzler> {
                         setShowAnimation: setShowAnimation,
                         setQuestionAppeared: setQuestionAppeared,
                         vController: controller.videoPlayerController,
-                      )
-                      // ),
-                      ),
+                      )),
                 if (showAnimation)
                   Positioned(
                     top: MediaQuery.of(context).size.height * 0.5 - 250,

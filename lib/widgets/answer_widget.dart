@@ -48,12 +48,6 @@ class _AnswerButtonState extends State<AnswerButton>
       duration: Duration(milliseconds: 400 + 100 * (widget.index + 1)),
     );
 
-    // Create a color tween from blue to green
-    // _colorAnimation = ColorTween(
-    //   begin: Colors.lightBlueAccent[700],
-    //   end: Colors.greenAccent[400],
-    // ).animate(_controller);
-
     _offsetAnimation = Tween<Offset>(
       begin: const Offset(-1, 0),
       end: const Offset(0, 0),
