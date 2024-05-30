@@ -148,10 +148,12 @@ class _RestartResumeState extends State<RestartResume>
                             onPressed: () {
                               setIsPressed(true);
                               widget.vController
-                                  .seekTo(const Duration(seconds: 0));
-                              widget.resetQuestionIndex();
-                              widget.setQuestionAppeared(false);
-                              widget.vController.play();
+                                  .seekTo(const Duration(seconds: 0))
+                                  .then((_) {
+                                widget.resetQuestionIndex();
+                                widget.setQuestionAppeared(false);
+                                widget.vController.play();
+                              });
                             },
                             buttonColor: Colors.teal[300],
                             text: 'Restart Quiz'),
