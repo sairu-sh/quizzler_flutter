@@ -155,6 +155,7 @@ class _QuizContentState extends State<QuizContent> {
                                             .currentAnswersOrImages['list']
                                             .indexOf(answer);
                                       });
+                                      widget.setIsPressed(false);
                                     },
                                     color: selectedIndex ==
                                             widget.controller
@@ -169,7 +170,6 @@ class _QuizContentState extends State<QuizContent> {
                                     selectedIndex: selectedIndex,
                                     correctIndex:
                                         widget.controller.correctAnswerIndex,
-                                    // setIsPressed: widget.setIsPressed,
                                     questionAppeared: widget.questionAppeared,
                                   ),
                                 ),
@@ -199,6 +199,7 @@ class _QuizContentState extends State<QuizContent> {
                                     as List<String>)
                                 .indexOf(answer);
                           });
+                          widget.setIsPressed(false);
                         },
                         color: selectedIndex ==
                                 widget.controller.currentAnswersOrImages['list']
@@ -211,7 +212,6 @@ class _QuizContentState extends State<QuizContent> {
                             .indexOf(answer),
                         selectedIndex: selectedIndex,
                         correctIndex: widget.controller.correctAnswerIndex,
-                        // setIsPressed: widget.setIsPressed,
                         questionAppeared: widget.questionAppeared,
                       );
                     }).toList(),
@@ -252,6 +252,7 @@ class _QuizContentState extends State<QuizContent> {
                                 widget.setIsAnswered(false);
                                 widget.setShowAnimation(false);
                                 widget.setQuestionAppeared(false);
+                                widget.setIsPressed(false);
                                 setState(() {
                                   pausedOn = widget.controller.pauseOn;
                                   selectedIndex = -1;
@@ -263,6 +264,7 @@ class _QuizContentState extends State<QuizContent> {
                                 }
                               } else if (widget.isTimeUp) {
                                 widget.controller.nextQuestion();
+                                widget.setIsPressed(false);
                                 setState(() {
                                   selectedIndex = -1;
                                   pausedOn = widget.controller.pauseOn;

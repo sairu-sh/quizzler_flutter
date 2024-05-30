@@ -24,7 +24,7 @@ class _QuizzlerState extends State<Quizzler> {
   bool isTimeUp = false;
   bool isOver = false;
   bool showAnimation = false; //show lottie animation for the result
-  bool isPressed = false;
+  bool isPressed = true;
   bool isCorrect = false;
 
   @override
